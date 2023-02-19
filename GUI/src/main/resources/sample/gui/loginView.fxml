@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.gui.LoginController">
+    <center>
+        <VBox alignment="CENTER" maxWidth="250.0" spacing="20.0">
+            <TextField fx:id="loginTextField" promptText="Login"/>
+            <TextField fx:id="passwordTextField" promptText="Password"/>
+        </VBox>
+    </center>
+    <bottom>
+        <VBox alignment="CENTER" spacing="5.0">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <Button fx:id="loginButton" text="Login" minWidth="150.0"/>
+            <Button fx:id="signInButton" text="Sign in" minWidth="150.0"/>
+        </VBox>
+    </bottom>
+</BorderPane>
