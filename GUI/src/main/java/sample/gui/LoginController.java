@@ -9,6 +9,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import sample.gui.data.HashData;
 import sample.gui.data.LoginData;
+import sample.gui.data.LoginDataList;
 import sample.gui.tools.DBConnection;
 
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -29,11 +29,12 @@ public class LoginController implements Initializable{
     private Button loginButton;
     @FXML
     private Button signInButton;
-
-    private final List<LoginData> loginDataList = new LinkedList<>();
+    private static List<LoginData> loginDataList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
+        loginDataList = LoginDataList.getInstance();
+
         try(Statement statement = DBConnection.getConnection().createStatement()){
             String query = "SELECT Login, Hash, Salt FROM Clients C JOIN Passwords P on C.ClientID = P.ClientID";
             ResultSet rs = statement.executeQuery(query);
@@ -81,7 +82,6 @@ public class LoginController implements Initializable{
                 .setOnCloseRequest(event -> dialog.getDialogPane().getScene().getWindow().hide());
 
         RegisterController controller = fxmlLoader.getController();
-        controller.setLoginDataList(loginDataList);
         dialog.showAndWait();
     }
 }

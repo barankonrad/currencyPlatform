@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sample.gui.data.LoginData;
+import sample.gui.data.LoginDataList;
 
 import java.net.URL;
 import java.util.List;
@@ -31,13 +32,14 @@ public class RegisterController implements Initializable{
     @FXML
     private Button cancelButton;
 
-    @FXML
-    private List<LoginData> loginDataList;
+    private static List<LoginData> loginDataList;
     private final BooleanProperty isLoginOccupied = new SimpleBooleanProperty(false);
     private final BooleanProperty arePasswordsTheSame = new SimpleBooleanProperty(true);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
+        loginDataList = LoginDataList.getInstance();
+
         Consumer<TextField> highlightOn = textField -> {
             textField.setStyle("-fx-border-color: red");
         };
@@ -102,10 +104,6 @@ public class RegisterController implements Initializable{
 
     public void handleCancelButton(){
         cancelButton.getScene().getWindow().hide();
-    }
-
-    public void setLoginDataList(List<LoginData> loginDataList){
-        this.loginDataList = loginDataList;
     }
 
     private boolean checkData(){
