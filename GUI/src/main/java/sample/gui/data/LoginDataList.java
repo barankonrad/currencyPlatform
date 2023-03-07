@@ -3,16 +3,17 @@ package sample.gui.data;
 import java.util.LinkedList;
 import java.util.List;
 
-// TODO: 27.02.2023 CHANGE TO SINGLETON LIST OF USERS
 public class LoginDataList{
 
-    private static final List<LoginData> instance = new LinkedList<>();
+    private static final List<LoginDataItem> instance = new LinkedList<>();
 
-    public static List<LoginData> getInstance(){
+    private LoginDataList(){}
+
+    public static List<LoginDataItem> getInstance(){
         return instance;
     }
 
-    public static void add(LoginData data){
+    public static void add(LoginDataItem data){
         instance.add(data);
     }
 }

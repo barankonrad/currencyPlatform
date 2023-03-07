@@ -1,11 +1,11 @@
-package sample.gui.data;
+package sample.gui.tools;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-public class HashData{
+public class HashTool{
     public static String encodeHash(String password, int salt){
         String salted = password + salt;
         String hashed = null;

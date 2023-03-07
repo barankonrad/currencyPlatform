@@ -10,6 +10,8 @@ public class DBConnection{
 
     private static Connection connection;
 
+    private DBConnection(){}
+
     public static void makeConnection(){
 
         try{

@@ -8,7 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import sample.gui.data.LoginData;
+import sample.gui.data.LoginDataItem;
 import sample.gui.data.LoginDataList;
 
 import java.net.URL;
@@ -32,7 +32,7 @@ public class RegisterController implements Initializable{
     @FXML
     private Button cancelButton;
 
-    private static List<LoginData> loginDataList;
+    private static List<LoginDataItem> loginDataList;
     private final BooleanProperty isLoginOccupied = new SimpleBooleanProperty(false);
     private final BooleanProperty arePasswordsTheSame = new SimpleBooleanProperty(true);
 
@@ -49,7 +49,7 @@ public class RegisterController implements Initializable{
         };
 
         loginTextField.focusedProperty().addListener(observable -> {
-            isLoginOccupied.set(loginDataList.stream().map(LoginData::getLogin)
+            isLoginOccupied.set(loginDataList.stream().map(LoginDataItem::getLogin)
                     .anyMatch(login -> login.equals(loginTextField.getText())));
         });
 
@@ -62,7 +62,6 @@ public class RegisterController implements Initializable{
             }
         });
 
-        // TODO: 27.02.2023 REDUNDANT, TO CHANGE
         confirmPasswordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(oldValue)
                 arePasswordsTheSame.set(confirmPasswordTextField.getText().equals(passwordTextField.getText()));
