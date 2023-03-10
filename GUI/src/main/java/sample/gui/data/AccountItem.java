@@ -11,6 +11,11 @@ public class AccountItem{
         this.balance = balance;
     }
 
+    @Override
+    public String toString(){
+        return currency.toUpperCase() + ": " + String.format("%.2f", balance);
+    }
+
     public int getId(){
         return id;
     }

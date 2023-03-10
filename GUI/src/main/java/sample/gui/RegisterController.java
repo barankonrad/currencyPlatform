@@ -10,8 +10,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sample.gui.data.LoginDataItem;
 import sample.gui.data.LoginDataList;
+import sample.gui.tools.DBConnection;
+import sample.gui.tools.HashTool;
 
 import java.net.URL;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -40,18 +44,13 @@ public class RegisterController implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle){
         loginDataList = LoginDataList.getInstance();
 
-        Consumer<TextField> highlightOn = textField -> {
-            textField.setStyle("-fx-border-color: red");
-        };
+        Consumer<TextField> highlightOn = textField -> textField.setStyle("-fx-border-color: red");
 
-        Consumer<TextField> highlightOff = textField -> {
-            textField.setStyle(null);
-        };
+        Consumer<TextField> highlightOff = textField -> textField.setStyle(null);
 
-        loginTextField.focusedProperty().addListener(observable -> {
-            isLoginOccupied.set(loginDataList.stream().map(LoginDataItem::getLogin)
-                    .anyMatch(login -> login.equals(loginTextField.getText())));
-        });
+        loginTextField.focusedProperty().addListener(observable -> isLoginOccupied.set(
+                loginDataList.stream().map(LoginDataItem::getLogin)
+                        .anyMatch(login -> login.equals(loginTextField.getText()))));
 
         isLoginOccupied.addListener((observableValue, oldValue, newValue) -> {
             if(newValue){
@@ -71,7 +70,6 @@ public class RegisterController implements Initializable{
             if(oldValue)
                 arePasswordsTheSame.set(confirmPasswordTextField.getText().equals(passwordTextField.getText()));
         });
-        // =========
 
         arePasswordsTheSame.addListener(((observableValue, oldValue, newValue) -> {
             if(!newValue){
@@ -95,7 +93,22 @@ public class RegisterController implements Initializable{
             alert.setContentText("User " + loginTextField.getText() + " signed in successfully.");
 
             // TODO: 27.02.2023 ADD QUERY CREATING USER
-            String query = "CREATE NEW USER";
+            String login = loginTextField.getText();
+            String password = passwordTextField.getText();
+            String firstName = firstNameTextField.getText();
+            String lastName = lastNameTextField.getText();
+            int salt = HashTool.generateNewSalt();
+            String hash = HashTool.encodeHash(password, salt);
+
+            String query = String.format("EXEC addNewUser '%s', '%s', '%d', '%s', '%s'", login, hash, salt, firstName,
+                    lastName);
+            try(Statement statement = DBConnection.getConnection().createStatement()){
+                statement.execute(query);
+            }
+            catch(SQLException e){
+                System.out.println(e.getMessage());
+                return;
+            }
         }
         alert.showAndWait();
         doneButton.getScene().getWindow().hide();

@@ -1,5 +1,7 @@
 package sample.gui;
 
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -12,6 +14,8 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ClientPanelController implements Initializable{
@@ -19,21 +23,21 @@ public class ClientPanelController implements Initializable{
     private Label welcomeLabel;
     @FXML
     private ListView<AccountItem> accountListView;
+    private List<AccountItem> accountsList;
+    private FilteredList<AccountItem> filteredList;
+    private SortedList<AccountItem> sortedList;
     private UserSingleton user;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         loadData();
-
-        System.out.println(user.getId());
-        System.out.println(user.getLogin());
-        System.out.println(user.getPassword());
-
-        welcomeLabel.setText("Welcome " + user.getFirstName() + " " + user.getLastName() + "!");
+        // TODO: 10.03.2023 FILTERED AND SORTED LISTS OF ACCOUNTS LIST
+        accountListView.getItems().addAll(accountsList);
     }
 
     public void loadData(){
         user = UserSingleton.getInstance();
+        accountsList = new LinkedList<>();
 
         try(Statement statement = DBConnection.getConnection().createStatement()){
             String query = "SELECT * FROM Clients C WHERE C.ClientID = " + user.getId();
@@ -42,6 +46,18 @@ public class ClientPanelController implements Initializable{
                 user.setFirstName(rs.getString("FirstName"));
                 user.setLastName(rs.getString("LastName"));
             }
+
+            query = "SELECT * FROM Balances WHERE ClientID = " + user.getId();
+            rs = statement.executeQuery(query);
+            while(rs.next()){
+                int id = rs.getInt("BalanceID");
+                String currency = rs.getString("Currency");
+                double balance = rs.getDouble("Balance");
+
+                accountsList.add(new AccountItem(id, currency, balance));
+            }
+            // TODO: 10.03.2023 LIST OF CONTACTS
+            query = "SELECT * FROM Contacts WHERE UserID = " + user.getId();
         }
         catch(SQLException e){
             System.out.println(e.getMessage());

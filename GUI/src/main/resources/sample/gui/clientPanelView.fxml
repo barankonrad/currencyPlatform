@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
 <BorderPane prefHeight="450.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.gui.ClientPanelController">
     <top>
@@ -19,6 +20,17 @@
         <VBox alignment="CENTER" spacing="5.0">
             <Label alignment="CENTER" contentDisplay="BOTTOM" prefWidth="128.0" text="Your accounts"
                    textAlignment="CENTER"/>
+            <ChoiceBox prefWidth="200.00" value="Sort by currency">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Sort by currency"/>
+                        <String fx:value="B"/>
+                        <String fx:value="C"/>
+                        <String fx:value="D"/>
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+
             <ListView fx:id="accountListView"/>
         </VBox>
 
@@ -27,11 +39,11 @@
         <VBox alignment="TOP_CENTER" prefHeight="450.0" prefWidth="150.0" spacing="5.0">
             <Label contentDisplay="CENTER" text="Operations" textAlignment="CENTER"/>
             <VBox alignment="CENTER" spacing="5.0">
-                <Button text="New account" prefWidth="125.0"/>
-                <Button text="Transfer" prefWidth="125.0"/>
-                <Button text="Transfer history" prefWidth="125.0"/>
-                <Button text="Contacts" prefWidth="125.0"/>
-                <Button text="Current rates" prefWidth="125.0"/>
+                <Button prefWidth="125.0" text="New account"/>
+                <Button prefWidth="125.0" text="Transfer"/>
+                <Button prefWidth="125.0" text="Transfer history"/>
+                <Button prefWidth="125.0" text="Contacts"/>
+                <Button prefWidth="125.0" text="Current rates"/>
             </VBox>
         </VBox>
     </right>
