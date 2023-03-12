@@ -31,8 +31,14 @@ public class ClientPanelController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         loadData();
+        welcomeLabel.setText(String.format("Welcome %s %s!", user.getFirstName(), user.getLastName()));
+
         // TODO: 10.03.2023 FILTERED AND SORTED LISTS OF ACCOUNTS LIST
         accountListView.getItems().addAll(accountsList);
+
+    }
+
+    public void handleNewBalanceButton(){
     }
 
     public void loadData(){

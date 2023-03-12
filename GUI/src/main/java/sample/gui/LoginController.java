@@ -133,8 +133,6 @@ public class LoginController implements Initializable{
 }
 
 /*
-EXEC addNewClient 'login', '4qU7vlnLH6IqN6plut6/Z2clrNtaHuew2aTAwyA25nA=', 17804, 'test', 'user'
-LOGIN: login
-PASSWORD: password
-SALT: 1601
+LOGIN: a
+PASSWORD: a
  */

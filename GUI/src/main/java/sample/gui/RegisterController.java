@@ -84,13 +84,7 @@ public class RegisterController implements Initializable{
 
     public void handleDoneButton(){
         Alert alert = new Alert(Alert.AlertType.NONE);
-        if(!checkData()){
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("Invalid data. Correct your details.");
-
-            alert.showAndWait();
-        }
-        else{
+        if(checkData()){
             String login = loginTextField.getText();
             String password = passwordTextField.getText();
             String firstName = firstNameTextField.getText();
@@ -101,21 +95,23 @@ public class RegisterController implements Initializable{
             String query =
                     String.format("EXEC addNewClient '%s', '%s', %d, '%s', '%s'", login, hash, salt,
                             firstName, lastName);
-            System.out.println(query);
             try(Statement statement = DBConnection.getConnection().createStatement()){
-                System.out.println("try");
                 statement.execute(query);
-
                 alert.setAlertType(Alert.AlertType.INFORMATION);
                 alert.setContentText("User " + loginTextField.getText() + " signed in successfully.");
             }
             catch(SQLException e){
-                System.out.println("catch");
                 alert.setAlertType(Alert.AlertType.WARNING);
                 alert.setContentText(e.getMessage());
             }
             alert.showAndWait();
             doneButton.getScene().getWindow().hide();
+        }
+        else{
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Invalid data. Correct your details.");
+
+            alert.showAndWait();
         }
     }
 

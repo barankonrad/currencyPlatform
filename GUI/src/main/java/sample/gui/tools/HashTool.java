@@ -26,7 +26,7 @@ public class HashTool{
         return hashed;
     }
 
-    public static int generateNewSalt(){ // TODO: 10.03.2023 ADD SALT RANGE 
+    public static int generateNewSalt(){
         List<LoginDataItem> list = LoginDataList.getInstance();
         Set<Integer> saltSet = list.stream().map(LoginDataItem::getSalt).collect(Collectors.toSet());
         Random random = new Random();
