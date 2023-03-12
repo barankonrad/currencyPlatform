@@ -87,12 +87,10 @@ public class RegisterController implements Initializable{
         if(!checkData()){
             alert.setAlertType(Alert.AlertType.WARNING);
             alert.setContentText("Invalid data. Correct your details.");
+
+            alert.showAndWait();
         }
         else{
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-            alert.setContentText("User " + loginTextField.getText() + " signed in successfully.");
-
-            // TODO: 27.02.2023 ADD QUERY CREATING USER
             String login = loginTextField.getText();
             String password = passwordTextField.getText();
             String firstName = firstNameTextField.getText();
@@ -100,18 +98,25 @@ public class RegisterController implements Initializable{
             int salt = HashTool.generateNewSalt();
             String hash = HashTool.encodeHash(password, salt);
 
-            String query = String.format("EXEC addNewUser '%s', '%s', '%d', '%s', '%s'", login, hash, salt, firstName,
-                    lastName);
+            String query =
+                    String.format("EXEC addNewClient '%s', '%s', %d, '%s', '%s'", login, hash, salt,
+                            firstName, lastName);
+            System.out.println(query);
             try(Statement statement = DBConnection.getConnection().createStatement()){
+                System.out.println("try");
                 statement.execute(query);
+
+                alert.setAlertType(Alert.AlertType.INFORMATION);
+                alert.setContentText("User " + loginTextField.getText() + " signed in successfully.");
             }
             catch(SQLException e){
-                System.out.println(e.getMessage());
-                return;
+                System.out.println("catch");
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText(e.getMessage());
             }
+            alert.showAndWait();
+            doneButton.getScene().getWindow().hide();
         }
-        alert.showAndWait();
-        doneButton.getScene().getWindow().hide();
     }
 
     public void handleCancelButton(){

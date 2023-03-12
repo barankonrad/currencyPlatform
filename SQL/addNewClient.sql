@@ -13,12 +13,13 @@ BEGIN TRAN
 BEGIN TRY
     INSERT INTO Clients VALUES
     (@login, @firstName, @lastName)
+    DECLARE @id INT = @@IDENTITY
     INSERT INTO Passwords VALUES
-    (@hash, @salt)
+    (@id, @hash, @salt)
 
     COMMIT TRAN
 END TRY
 BEGIN CATCH
     RAISERROR('Error occured', 16, 1)
-    ROLLBACK 
+    ROLLBACK
 END CATCH

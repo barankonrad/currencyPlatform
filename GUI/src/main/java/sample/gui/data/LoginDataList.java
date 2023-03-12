@@ -16,4 +16,5 @@ public class LoginDataList{
     public static void add(LoginDataItem data){
         instance.add(data);
     }
+
 }

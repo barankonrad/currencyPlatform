@@ -30,7 +30,7 @@ public class HashTool{
         List<LoginDataItem> list = LoginDataList.getInstance();
         Set<Integer> saltSet = list.stream().map(LoginDataItem::getSalt).collect(Collectors.toSet());
         Random random = new Random();
-        int salt = random.nextInt();
+        int salt = random.nextInt(Short.MAX_VALUE);
 
         while(saltSet.contains(salt))
             salt = random.nextInt();

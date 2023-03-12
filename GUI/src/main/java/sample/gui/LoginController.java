@@ -35,6 +35,7 @@ public class LoginController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         loginDataList = LoginDataList.getInstance();
+        loadLoginData();
 
         loginTextField.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode().equals(KeyCode.ENTER))
@@ -46,27 +47,9 @@ public class LoginController implements Initializable{
                 handleLoginButton();
         });
 
-        try(Statement statement = DBConnection.getConnection().createStatement()){
-            String query = "SELECT C.ClientID 'Id', Login, Hash, Salt FROM Clients C JOIN Passwords P on C.ClientID =" +
-                    " P.ClientID";
-            ResultSet rs = statement.executeQuery(query);
-            while(rs.next()){
-                int id = rs.getInt("Id");
-                String login = rs.getString("Login");
-                String hash = rs.getString("Hash");
-                int salt = Integer.parseInt(rs.getString("Salt"), 16);
-
-                loginDataList.add(new LoginDataItem(id, login, hash, salt));
-            }
-            System.out.println("Data loaded...");
-        }
-        catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
     }
 
     public void handleLoginButton(){
-        boolean loggedIn = false;
         String inputLogin = loginTextField.getText();
         String inputPassword = passwordTextField.getText();
 
@@ -106,6 +89,7 @@ public class LoginController implements Initializable{
                 .setOnCloseRequest(event -> dialog.getDialogPane().getScene().getWindow().hide());
 
         dialog.showAndWait();
+        loadLoginData();
     }
 
     private void login(){
@@ -125,9 +109,31 @@ public class LoginController implements Initializable{
 
         clientPanel.showAndWait();
     }
+
+    private static void loadLoginData(){
+        loginDataList.clear();
+        try(Statement statement = DBConnection.getConnection().createStatement()){
+            String query = "SELECT C.ClientID 'Id', Login, Hash, Salt FROM Clients C JOIN Passwords P on C.ClientID =" +
+                    " P.ClientID";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                int id = rs.getInt("Id");
+                String login = rs.getString("Login");
+                String hash = rs.getString("Hash");
+                int salt = Integer.parseInt(rs.getString("Salt"), 16);
+
+                loginDataList.add(new LoginDataItem(id, login, hash, salt));
+            }
+            System.out.println("Data loaded...");
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
 
 /*
+EXEC addNewClient 'login', '4qU7vlnLH6IqN6plut6/Z2clrNtaHuew2aTAwyA25nA=', 17804, 'test', 'user'
 LOGIN: login
 PASSWORD: password
 SALT: 1601
