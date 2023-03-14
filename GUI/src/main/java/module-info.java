@@ -3,7 +3,7 @@ module sample.gui {
     requires javafx.fxml;
     requires java.sql;
     requires com.microsoft.sqlserver.jdbc;
-    requires org.json;
+    requires com.google.gson;
 
     opens sample.gui to javafx.fxml;
     exports sample.gui;

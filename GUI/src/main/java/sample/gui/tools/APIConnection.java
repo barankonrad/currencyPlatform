@@ -1,7 +1,7 @@
 package sample.gui.tools;
 
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -50,14 +50,13 @@ public class APIConnection{
                 throw new RuntimeException("HttpsResponseCode: " + responseCode);
             }
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder response = new StringBuilder();
-            reader.lines().forEach(response::append);
-            JSONTokener parser = new JSONTokener(String.valueOf(response));
-            JSONObject json = new JSONObject(parser).getJSONObject("data");
-
+            Gson gson = new Gson();
             List<CurrencyItem> list = new LinkedList<>();
-            json.keySet().forEach(key -> list.add(new CurrencyItem(key, json.getDouble(key))));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            JsonObject dataObject = gson.fromJson(reader, JsonObject.class).get("data").getAsJsonObject();
+            dataObject.entrySet()
+                .forEach(entry -> list.add(new CurrencyItem(entry.getKey(), entry.getValue().getAsDouble())));
+
 
             list.forEach(System.out::println);
         }
