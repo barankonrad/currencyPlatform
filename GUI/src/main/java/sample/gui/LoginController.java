@@ -1,7 +1,6 @@
 package sample.gui;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -11,7 +10,6 @@ import sample.gui.data.UserSingleton;
 import sample.gui.tools.DBConnection;
 import sample.gui.tools.HashTool;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,10 +24,6 @@ public class LoginController implements Initializable{
     private TextField loginTextField;
     @FXML
     private TextField passwordTextField;
-    @FXML
-    private Button loginButton;
-    @FXML
-    private Button signInButton;
     private static List<LoginDataItem> loginDataList;
 
     @Override
@@ -73,45 +67,47 @@ public class LoginController implements Initializable{
     }
 
     public void handleSignInButton(){
-        Dialog<ButtonType> dialog = new Dialog<>();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("registerView.fxml"));
-        try{
-            dialog.getDialogPane().setContent(fxmlLoader.load());
-        }
-        catch(IOException e){
-            System.out.println(e.getMessage());
-            return;
-        }
+        Dialog<ButtonType> dialog = new CustomDialog<>("registerView.fxml");
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(getClass().getResource("registerView.fxml"));
+//        try{
+//            dialog.getDialogPane().setContent(fxmlLoader.load());
+//        }
+//        catch(IOException e){
+//            System.out.println(e.getMessage());
+//            return;
+//        }
         dialog.setTitle("Sign up");
         dialog.setHeaderText("Fill the data below and press OK button to sign up");
-        dialog.getDialogPane().getScene().getWindow()
-                .setOnCloseRequest(event -> dialog.getDialogPane().getScene().getWindow().hide());
+//        dialog.getDialogPane().getScene().getWindow()
+//                .setOnCloseRequest(event -> dialog.getDialogPane().getScene().getWindow().hide());
 
         dialog.showAndWait();
         loadLoginData();
     }
 
     private void login(){
-        Dialog<ButtonType> clientPanel = new Dialog<>();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("clientPanelView.fxml"));
-        try{
-            clientPanel.getDialogPane().setContent(fxmlLoader.load());
-        }
-        catch(IOException e){
-            System.out.println(e.getMessage());
-            return;
-        }
+        Dialog<ButtonType> clientPanel = new CustomDialog<>("clientPanelView.fxml");
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(getClass().getResource("clientPanelView.fxml"));
+//        try{
+//            clientPanel.getDialogPane().setContent(fxmlLoader.load());
+//        }
+//        catch(IOException e){
+//            System.out.println(e.getMessage());
+//            return;
+//        }
         clientPanel.setTitle("Client panel");
-        clientPanel.getDialogPane().getScene().getWindow()
-                .setOnCloseRequest(event -> clientPanel.getDialogPane().getScene().getWindow().hide());
+//        clientPanel.getDialogPane().getScene().getWindow()
+//                .setOnCloseRequest(event -> clientPanel.getDialogPane().getScene().getWindow().hide());
 
         clientPanel.showAndWait();
     }
 
     private static void loadLoginData(){
         loginDataList.clear();
+
+        // TODO: 13.03.2023 MOVE CONNECTION TO DATABASE CLASS
         try(Statement statement = DBConnection.getConnection().createStatement()){
             String query = "SELECT C.ClientID 'Id', Login, Hash, Salt FROM Clients C JOIN Passwords P on C.ClientID =" +
                     " P.ClientID";

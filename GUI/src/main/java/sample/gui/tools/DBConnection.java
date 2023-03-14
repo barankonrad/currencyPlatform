@@ -3,9 +3,9 @@ package sample.gui.tools;
 import java.sql.*;
 
 public class DBConnection{
-    private static final String serverName = "LAPTOP-UI0RMMIG";
-    private static final String dbName = "CurrencyDB";
-    private static final String url = "jdbc:sqlserver://" + serverName + ";DatabaseName=" + dbName + ";encrypt=true;" +
+
+    private static final String url =
+        "jdbc:sqlserver://" + PrivateData.serverName + ";DatabaseName=" + PrivateData.dbName + ";encrypt=true;" +
             "trustServerCertificate=true;integratedSecurity=true";
 
     private static Connection connection;

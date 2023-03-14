@@ -28,5 +28,4 @@ public class LoginDataItem{
     public int getSalt(){
         return salt;
     }
-
 }
