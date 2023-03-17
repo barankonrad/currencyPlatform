@@ -10,6 +10,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class HashTool{
+
+    private HashTool(){}
+
     public static String encodeHash(String password, int salt){
         String salted = password + salt;
         String hashed = null;

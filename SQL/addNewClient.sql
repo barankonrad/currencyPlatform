@@ -17,9 +17,10 @@ BEGIN TRY
     INSERT INTO Passwords VALUES
     (@id, @hash, @salt)
 
-    COMMIT TRAN
+    COMMIT
 END TRY
 BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        ROLLBACK
     RAISERROR('Error occured', 16, 1)
-    ROLLBACK
 END CATCH

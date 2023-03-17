@@ -5,7 +5,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import sample.gui.data.AccountItem;
@@ -41,12 +40,16 @@ public class ClientPanelController implements Initializable{
     }
 
     public void handleNewBalanceButton(){
-        // TODO: 13.03.2023 EDIT DB SCHEMA TO MAKE ABLE SAME CURRENCY BALANCE ACCOUNTS
-        Dialog<ButtonType> dialog = new CustomDialog<>("newBalanceView.fxml");
+        CustomDialog<ButtonType> dialog = new CustomDialog<>("newBalanceView.fxml");
 
         dialog.setTitle("New account");
         dialog.setHeaderText("Select a currency for your account");
-        dialog.showAndWait();
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+        NewBalanceController controller = dialog.getLoader().getController();
+
+        dialog.showAndWait()
+            .filter(result -> result.equals(ButtonType.OK))
+            .ifPresent(result -> controller.addBalanceQuery());
     }
 
     public void loadData(){

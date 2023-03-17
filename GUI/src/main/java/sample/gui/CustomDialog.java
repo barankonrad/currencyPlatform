@@ -6,9 +6,12 @@ import javafx.scene.control.Dialog;
 import java.io.IOException;
 
 public class CustomDialog<T> extends Dialog<T>{
+
+    private final FXMLLoader fxmlLoader;
+
     public CustomDialog(String source){
         super();
-        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource(source));
         try{
             this.getDialogPane().setContent(fxmlLoader.load());
@@ -17,8 +20,13 @@ public class CustomDialog<T> extends Dialog<T>{
             System.out.println(e.getMessage());
             return;
         }
-        this.getDialogPane().getScene().getWindow()
-                .setOnCloseRequest(event -> this.getDialogPane().getScene().getWindow().hide());
+        this.getDialogPane()
+            .getScene()
+            .getWindow()
+            .setOnCloseRequest(event -> this.getDialogPane().getScene().getWindow().hide());
+    }
 
+    public FXMLLoader getLoader(){
+        return fxmlLoader;
     }
 }
