@@ -1,7 +1,6 @@
-CREATE PROC addNewBalance
-@id INT,
-@currency NVARCHAR(3),
-@name NVARCHAR(30)
+CREATE PROC addNewContact
+@user INT,
+@friend INT
 AS
 SET XACT_ABORT OFF
 SET IMPLICIT_TRANSACTIONS OFF
@@ -9,8 +8,8 @@ SET IMPLICIT_TRANSACTIONS OFF
 BEGIN TRAN
 
 BEGIN TRY
-    INSERT INTO Balances VALUES
-    (@id, @currency, @name, 0)
+    INSERT INTO Contacts VALUES
+    (@user, @friend)
     COMMIT
 END TRY
 BEGIN CATCH

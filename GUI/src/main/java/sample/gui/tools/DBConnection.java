@@ -8,26 +8,17 @@ public class DBConnection{
         "jdbc:sqlserver://" + PrivateData.serverName + ";DatabaseName=" + PrivateData.dbName + ";encrypt=true;" +
             "trustServerCertificate=true;integratedSecurity=true";
 
-    private static Connection connection;
-
     private DBConnection(){}
 
-    public static void makeConnection(){
-
+    public static Connection getConnection(){
         try{
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            Connection connection = DriverManager.getConnection(url);
-            System.out.println("Successfully connected to the database");
-            DBConnection.connection = connection;
+            return DriverManager.getConnection(url);
         }
         catch(ClassNotFoundException | SQLException e){
             System.out.println("Failed to connect to the database");
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
-    }
-
-    public static Connection getConnection(){
-        return connection;
     }
 }
 

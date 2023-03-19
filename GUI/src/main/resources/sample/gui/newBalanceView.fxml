@@ -4,14 +4,19 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.layout.BorderPane?>
 
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane prefHeight="200.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.gui.NewBalanceController">
     <center>
-        <ChoiceBox fx:id="currencyChoiceBox" prefWidth="175.0">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                </FXCollections>
-            </items>
-        </ChoiceBox>
+        <VBox alignment="CENTER" spacing="10.0">
+            <ChoiceBox fx:id="currencyChoiceBox" prefWidth="175.0">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+            <TextField fx:id="nameTextField" promptText="Balance name" maxWidth="175.0"/>
+        </VBox>
     </center>
 </BorderPane>

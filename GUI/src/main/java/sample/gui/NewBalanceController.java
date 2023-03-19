@@ -3,19 +3,23 @@ package sample.gui;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import sample.gui.data.UserSingleton;
 import sample.gui.tools.APIConnection;
 import sample.gui.tools.DBConnection;
 
 import java.net.URL;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class NewBalanceController implements Initializable{
     @FXML
     private ChoiceBox<String> currencyChoiceBox;
+    @FXML
+    private TextField nameTextField;
     private List<String> currencyList;
 
     @Override
@@ -26,12 +30,17 @@ public class NewBalanceController implements Initializable{
     }
 
     public void addBalanceQuery(){
-        try(Statement statement = DBConnection.getConnection().createStatement()){
+        try(Connection conn = DBConnection.getConnection()){
             UserSingleton user = UserSingleton.getInstance();
             String chosenCurrency = currencyChoiceBox.getValue();
-            String query = String.format("EXEC addNewBalance %d, '%s'", user.getId(), chosenCurrency);
+            // TODO: 18.03.2023 HANDLE EMPTY TEXT AND CHARACTER LIMIT
+            String name = nameTextField.getText();
+            CallableStatement cs = conn.prepareCall("{call addNewBalance(?, ?, ?)}");
+            cs.setInt(1,user.getId());
+            cs.setString(2, chosenCurrency);
+            cs.setString(3, name);
 
-            statement.execute(query);
+            cs.execute();
         }
         catch(SQLException e){
             System.out.println(e.getMessage());

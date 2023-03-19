@@ -42,8 +42,8 @@
                 <Button text="New balance" onAction="#handleNewBalanceButton" prefWidth="125.0"/>
                 <Button text="Transfer" prefWidth="125.0"/>
                 <Button text="Transfer history" prefWidth="125.0"/>
-                <Button text="Contacts" prefWidth="125.0"/>
-                <Button text="Current rates" prefWidth="125.0"/>
+                <Button text="Contacts" prefWidth="125.0" onAction="#handleContactsButton"/>
+                <Button text="Rates history" prefWidth="125.0" onAction="#handleRatesHistoryButton"/>
             </VBox>
         </VBox>
     </right>

@@ -19,12 +19,16 @@ CREATE TABLE Contacts(
     ID INT CONSTRAINT ContactsPK PRIMARY KEY IDENTITY(1,1),
     UserID INT CONSTRAINT ContactsUsersFK FOREIGN KEY REFERENCES Clients(ClientID),
     FriendID INT CONSTRAINT ContactsFriendsFK FOREIGN KEY REFERENCES Clients(ClientID)
+
+    CONSTRAINT RelationUnique UNIQUE (UserID, FriendID),
+    CONSTRAINT NotSamePersonCheck CHECK (UserID != FriendID)
 )
 
 CREATE TABLE Balances(
     BalanceID INT CONSTRAINT BalancePK PRIMARY KEY IDENTITY(1,1),
     ClientID INT CONSTRAINT BalanceClientFK FOREIGN KEY REFERENCES Clients(ClientID),
     Currency NVARCHAR(3),
+    Name NVARCHAR(30),
     Balance MONEY
 
     CONSTRAINT ClientCurrencyUnique UNIQUE (ClientID, Currency)

@@ -2,18 +2,21 @@ package sample.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import sample.gui.data.LoginDataItem;
-import sample.gui.data.LoginDataList;
+import sample.gui.data.LoginData;
 import sample.gui.data.UserSingleton;
 import sample.gui.tools.DBConnection;
 import sample.gui.tools.HashTool;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -24,11 +27,11 @@ public class LoginController implements Initializable{
     private TextField loginTextField;
     @FXML
     private TextField passwordTextField;
-    private static List<LoginDataItem> loginDataList;
+    private static List<LoginData.LoginDataItem> loginDataList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        loginDataList = LoginDataList.getInstance();
+        loginDataList = LoginData.getListInstance();
         loadLoginData();
 
         loginTextField.setOnKeyPressed(keyEvent -> {
@@ -47,8 +50,8 @@ public class LoginController implements Initializable{
         String inputLogin = loginTextField.getText();
         String inputPassword = passwordTextField.getText();
 
-        LoginDataItem tryingToLog =
-                loginDataList.stream().filter(data -> data.getLogin().equals(inputLogin)).findAny().orElse(null);
+        LoginData.LoginDataItem tryingToLog =
+            loginDataList.stream().filter(data -> data.getLogin().equals(inputLogin)).findAny().orElse(null);
 
         if(tryingToLog != null){
             int salt = tryingToLog.getSalt();
@@ -88,18 +91,7 @@ public class LoginController implements Initializable{
 
     private void login(){
         Dialog<ButtonType> clientPanel = new CustomDialog<>("clientPanelView.fxml");
-//        FXMLLoader fxmlLoader = new FXMLLoader();
-//        fxmlLoader.setLocation(getClass().getResource("clientPanelView.fxml"));
-//        try{
-//            clientPanel.getDialogPane().setContent(fxmlLoader.load());
-//        }
-//        catch(IOException e){
-//            System.out.println(e.getMessage());
-//            return;
-//        }
         clientPanel.setTitle("Client panel");
-//        clientPanel.getDialogPane().getScene().getWindow()
-//                .setOnCloseRequest(event -> clientPanel.getDialogPane().getScene().getWindow().hide());
 
         clientPanel.showAndWait();
     }
@@ -107,18 +99,17 @@ public class LoginController implements Initializable{
     private static void loadLoginData(){
         loginDataList.clear();
 
-        // TODO: 13.03.2023 MOVE CONNECTION TO DATABASE CLASS
-        try(Statement statement = DBConnection.getConnection().createStatement()){
-            String query = "SELECT C.ClientID 'Id', Login, Hash, Salt FROM Clients C JOIN Passwords P on C.ClientID =" +
-                    " P.ClientID";
-            ResultSet rs = statement.executeQuery(query);
+        try(Connection conn = DBConnection.getConnection()){
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT C.ClientID 'Id', Login, Hash, Salt FROM Clients C JOIN Passwords P on C.ClientID = P.ClientID");
+            ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 int id = rs.getInt("Id");
                 String login = rs.getString("Login");
                 String hash = rs.getString("Hash");
                 int salt = Integer.parseInt(rs.getString("Salt"), 16);
 
-                loginDataList.add(new LoginDataItem(id, login, hash, salt));
+                loginDataList.add(new LoginData.LoginDataItem(id, login, hash, salt));
             }
             System.out.println("Data loaded...");
         }

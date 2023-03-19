@@ -12,11 +12,8 @@ import sample.gui.data.UserSingleton;
 import sample.gui.tools.DBConnection;
 
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class ClientPanelController implements Initializable{
@@ -24,19 +21,19 @@ public class ClientPanelController implements Initializable{
     private Label welcomeLabel;
     @FXML
     private ListView<AccountItem> accountListView;
-    private List<AccountItem> accountsList;
     private FilteredList<AccountItem> filteredList;
     private SortedList<AccountItem> sortedList;
     private UserSingleton user;
+    private ListView<String> contactsListView = new ListView<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
+        user = UserSingleton.getInstance();
         loadData();
+        loadAccounts();
         welcomeLabel.setText(String.format("Welcome %s %s!", user.getFirstName(), user.getLastName()));
 
         // TODO: 10.03.2023 FILTERED AND SORTED LISTS OF ACCOUNTS LIST
-        accountListView.getItems().addAll(accountsList);
-
     }
 
     public void handleNewBalanceButton(){
@@ -47,39 +44,61 @@ public class ClientPanelController implements Initializable{
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         NewBalanceController controller = dialog.getLoader().getController();
 
-        dialog.showAndWait()
-            .filter(result -> result.equals(ButtonType.OK))
-            .ifPresent(result -> controller.addBalanceQuery());
+        dialog.showAndWait().filter(result -> result.equals(ButtonType.OK)).ifPresent(result -> {
+            controller.addBalanceQuery();
+            loadAccounts();
+        });
     }
 
-    public void loadData(){
-        user = UserSingleton.getInstance();
-        accountsList = new LinkedList<>();
+    public void handleContactsButton(){
+        CustomDialog<ButtonType> dialog = new CustomDialog<>("contactsView.fxml");
+        dialog.setTitle("Contact's list");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
 
-        try(Statement statement = DBConnection.getConnection().createStatement()){
-            String query = "SELECT * FROM Clients C WHERE C.ClientID = " + user.getId();
-            ResultSet rs = statement.executeQuery(query);
+        dialog.showAndWait();
+    }
+
+    public void handleRatesHistoryButton(){
+        CustomDialog<ButtonType> dialog = new CustomDialog<>("ratesHistoryView.fxml");
+        dialog.setTitle("Rates history");
+
+        dialog.showAndWait();
+    }
+
+    private void loadData(){
+        try(Connection conn = DBConnection.getConnection()){
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Clients C WHERE C.ClientID = ?");
+            ps.setInt(1, user.getId());
+            ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 user.setFirstName(rs.getString("FirstName"));
                 user.setLastName(rs.getString("LastName"));
             }
+        }
+        catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
 
-            query = "SELECT * FROM Balances WHERE ClientID = " + user.getId();
-            rs = statement.executeQuery(query);
+    private void loadAccounts(){
+        LinkedList<AccountItem> list = new LinkedList<>();
+        try(Connection conn = DBConnection.getConnection()){
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Balances WHERE ClientID = ?");
+            ps.setInt(1, user.getId());
+            ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 int id = rs.getInt("BalanceID");
                 String currency = rs.getString("Currency");
+                String name = rs.getString("Name");
                 double balance = rs.getDouble("Balance");
 
-                accountsList.add(new AccountItem(id, currency, balance));
+                list.add(new AccountItem(id, currency, name, balance));
             }
-
-            // TODO: 10.03.2023 LIST OF CONTACTS
-            query = "SELECT * FROM Contacts WHERE UserID = " + user.getId();
+            accountListView.getItems().setAll(list);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
-
     }
+
 }

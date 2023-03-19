@@ -1,7 +1,6 @@
 package sample.gui.tools;
 
-import sample.gui.data.LoginDataItem;
-import sample.gui.data.LoginDataList;
+import sample.gui.data.LoginData;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -30,8 +29,8 @@ public class HashTool{
     }
 
     public static int generateNewSalt(){
-        List<LoginDataItem> list = LoginDataList.getInstance();
-        Set<Integer> saltSet = list.stream().map(LoginDataItem::getSalt).collect(Collectors.toSet());
+        List<LoginData.LoginDataItem> list = LoginData.getListInstance();
+        Set<Integer> saltSet = list.stream().map(LoginData.LoginDataItem::getSalt).collect(Collectors.toSet());
         Random random = new Random();
         int salt = random.nextInt(Short.MAX_VALUE);
 
