@@ -1,5 +1,5 @@
 # Multi-currency transfer platform
-The platform allows you to store amounts in different currencies and perform currency transfers. Amounts are converted at the exchange rate available at the time at which the operation is performed, thanks to a free usage of [freecurrencyapi.com](https://freecurrencyapi.com/). User logs via login and password. Passwords are hashed with SHA256 and a salt. The project operates on simplified database, which simulates real system.
+The platform allows you to store amounts in different currencies and perform currency transfers. Amounts are converted at the exchange rate available at the time at which the operation is performed, thanks to a free usage of [freecurrencyapi.com](https://freecurrencyapi.com/). User logs via login and password. Passwords are hashed with SHA256 and a salt. The project operates on simplified database, which simulates real system. The database is immune to SQL injection thanks to using java.sql.
 
 ![db diagram](https://raw.githubusercontent.com/barankonrad/currencyPlatform/main/images/db.png)
 
