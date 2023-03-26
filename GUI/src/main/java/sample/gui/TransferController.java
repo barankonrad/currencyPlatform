@@ -113,8 +113,8 @@ public class TransferController implements Initializable{
             cs.setString(5, titleTextField.getText());
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText(String.format("%s will receive %.3f Do you want to perform this operation?",
-                receiverChoiceBox.getValue().getFriendFullName(), (rate * amountSpinner.getValue())));
+            alert.setContentText(String.format("%s will receive %.3f %s. Do you want to perform this operation?",
+                receiverChoiceBox.getValue().getFriendFullName(), (rate * amountSpinner.getValue()), to.getCurrency()));
             alert.getDialogPane().getButtonTypes().setAll(ButtonType.NO, ButtonType.YES);
 
             Optional<ButtonType> result = alert.showAndWait();
