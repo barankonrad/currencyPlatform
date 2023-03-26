@@ -17,8 +17,7 @@ public class CustomDialog<T> extends Dialog<T>{
             this.getDialogPane().setContent(fxmlLoader.load());
         }
         catch(IOException e){
-            System.out.println(e.getMessage());
-            return;
+            throw new RuntimeException(e);
         }
         this.getDialogPane()
             .getScene()

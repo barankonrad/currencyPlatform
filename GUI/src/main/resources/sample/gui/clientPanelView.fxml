@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.FXCollections?>
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import java.lang.String?>
+<?import javafx.scene.text.*?>
+
 <BorderPane prefHeight="450.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.gui.ClientPanelController">
     <top>
@@ -20,16 +22,21 @@
         <VBox alignment="CENTER" spacing="5.0">
             <Label alignment="CENTER" contentDisplay="BOTTOM" prefWidth="128.0" text="Your accounts"
                    textAlignment="CENTER"/>
-            <ChoiceBox prefWidth="200.00" value="Sort by currency">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Sort by currency"/>
-                        <String fx:value="B"/>
-                        <String fx:value="C"/>
-                        <String fx:value="D"/>
-                    </FXCollections>
-                </items>
-            </ChoiceBox>
+            <HBox spacing="5.0">
+                <TextField fx:id="searchTextField" promptText="Search..."/>
+                <ChoiceBox fx:id="sortChoiceBox" prefHeight="25.0" value="Sort by currency">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Sort by currency"/>
+                            <String fx:value="Sort by balance"/>
+                            <String fx:value="Sort by creation date"/>
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
+                <padding>
+                    <Insets left="5.0" right="5.0"/>
+                </padding>
+            </HBox>
 
             <ListView fx:id="accountListView"/>
         </VBox>
@@ -38,12 +45,12 @@
     <right>
         <VBox alignment="TOP_CENTER" prefHeight="450.0" prefWidth="150.0" spacing="5.0">
             <Label contentDisplay="CENTER" text="Operations" textAlignment="CENTER"/>
-            <VBox alignment="CENTER" spacing="5.0">
-                <Button text="New balance" onAction="#handleNewBalanceButton" prefWidth="125.0"/>
-                <Button text="Transfer" prefWidth="125.0"/>
-                <Button text="Transfer history" prefWidth="125.0"/>
-                <Button text="Contacts" prefWidth="125.0" onAction="#handleContactsButton"/>
-                <Button text="Rates history" prefWidth="125.0" onAction="#handleRatesHistoryButton"/>
+            <VBox alignment="CENTER" spacing="15.0">
+                <Button onAction="#handleNewBalanceButton" prefWidth="125.0" text="New balance"/>
+                <Button onAction="#handleTransferButton" prefWidth="125.0" text="Transfer"/>
+                <Button onAction="#handleTransferHistoryButton" prefWidth="125.0" text="Transfer history"/>
+                <Button onAction="#handleContactsButton" prefWidth="125.0" text="Contacts"/>
+                <Button onAction="#handleRatesHistoryButton" prefWidth="125.0" text="Rates history"/>
             </VBox>
         </VBox>
     </right>

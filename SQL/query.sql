@@ -36,17 +36,11 @@ CREATE TABLE Balances(
 
 CREATE TABLE Transfers(
     TransferID INT CONSTRAINT TransfersPK PRIMARY KEY IDENTITY(1,1),
-    SenderID INT CONSTRAINT SenderFK FOREIGN KEY REFERENCES Clients(ClientID),
-    ReceiverID INT CONSTRAINT ReceiverFK FOREIGN KEY REFERENCES Clients(ClientID),
-    Currency NVARCHAR(3),
+    SenderAccountID INT CONSTRAINT SenderAccountFK FOREIGN KEY REFERENCES Balances(BalanceID),
+    ReceiverAccountID INT CONSTRAINT ReceiverAccountFK FOREIGN KEY REFERENCES Balances(BalanceID),
     Amount MONEY,
+    AmountExchanged MONEY,
+    ExchangeRate FLOAT,
     Title NVARCHAR(100),
     Date DATE
-)
-
-CREATE TABLE TransfersExchangeDetails(
-    TransferID INT CONSTRAINT ExchangeDetails PRIMARY KEY REFERENCES Transfers(TransferID),
-    ReceiverCurrency NVARCHAR(3),
-    ExchangeRate FLOAT,
-    AmountExchanged MONEY
 )

@@ -3,18 +3,11 @@ CREATE PROC addNewBalance
 @currency NVARCHAR(3),
 @name NVARCHAR(30)
 AS
-SET XACT_ABORT OFF
-SET IMPLICIT_TRANSACTIONS OFF
-
-BEGIN TRAN
 
 BEGIN TRY
     INSERT INTO Balances VALUES
     (@id, @currency, @name, 0)
-    COMMIT
 END TRY
 BEGIN CATCH
-    IF @@TRANCOUNT > 0
-        ROLLBACK
     RAISERROR('Error occured', 16, 1)
 END CATCH

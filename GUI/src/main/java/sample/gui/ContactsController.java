@@ -26,6 +26,7 @@ public class ContactsController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
+        user = UserSingleton.getInstance();
         loadContacts();
 
         contactsListView.setCellFactory(list -> {
@@ -40,16 +41,16 @@ public class ContactsController implements Initializable{
 
             ContextMenu menu = new ContextMenu(delete);
 
-            cell.textProperty()
-                .bind(Bindings.when(cell.emptyProperty()).then("")
-                    .otherwise(cell.itemProperty().asString()));
-
             cell.emptyProperty().addListener((observable, wasEmpty, isEmpty) -> {
                 if(isEmpty)
                     cell.setContextMenu(null);
                 else
                     cell.setContextMenu(menu);
             });
+
+            cell.textProperty()
+                .bind(Bindings.when(cell.emptyProperty()).then("")
+                    .otherwise(cell.itemProperty().asString()));
 
             return cell;
         });
@@ -63,33 +64,14 @@ public class ContactsController implements Initializable{
                     predicate -> predicate.toString().toLowerCase().contains(filter.toLowerCase()));
         });
     }
-
     private void loadContacts(){
-        user = UserSingleton.getInstance();
-        dataList = FXCollections.observableArrayList();
-        try(Connection conn = DBConnection.getConnection()){
-            PreparedStatement ps =
-                conn.prepareStatement("SELECT * FROM Contacts C JOIN Clients C2 ON C.FriendID = C2.ClientID "
-                    + "WHERE C.UserID = ?");
-            ps.setInt(1, user.getId());
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("ClientID");
-                String login = rs.getString("Login");
-                String firstName = rs.getString("FirstName");
-                String lastName = rs.getString("LastName");
+        user.loadContacts();
+        dataList = FXCollections.observableArrayList(user.getContactsList());
 
-                dataList.add(new ContactItem(user.getId(), id, login, firstName, lastName));
-            }
-
-            filteredList = new FilteredList<>(dataList, predicate -> true);
-            contactsListView.setItems(filteredList);
-            contactsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            contactsListView.getSelectionModel().selectFirst();
-        }
-        catch(SQLException e){
-            throw new RuntimeException(e);
-        }
+        filteredList = new FilteredList<>(dataList, predicate -> true);
+        contactsListView.setItems(filteredList);
+        contactsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        contactsListView.getSelectionModel().selectFirst();
     }
 
     public void addContactQuery(){
@@ -112,7 +94,7 @@ public class ContactsController implements Initializable{
             }
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

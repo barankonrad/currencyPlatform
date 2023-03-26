@@ -1,46 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import java.lang.String?>
+<?import javafx.scene.text.*?>
+
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.gui.RatesHistoryController">
 
     <top>
         <GridPane alignment="CENTER" hgap="20.0" vgap="5.0">
             <Label text="Base currency" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <Label text="Target currency" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label text="Time span" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <Label text="Target currency" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <Label text="Time span" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
             <ChoiceBox fx:id="baseChoiceBox" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                     </FXCollections>
                 </items>
             </ChoiceBox>
-            <ChoiceBox fx:id="targetChoiceBox" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button text="&lt;-&gt;" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS"
+                    onAction="#handleSwapButton">
+                <font>
+                    <Font size="10.0"/>
+                </font>
+            </Button>
+            <ChoiceBox fx:id="targetChoiceBox" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                     </FXCollections>
                 </items>
             </ChoiceBox>
-            <ChoiceBox fx:id="spanChoiceBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <ChoiceBox fx:id="spanChoiceBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                 <String fx:value="last week"/>
                 <String fx:value="last month"/>
                 <String fx:value="last quarter"/>
             </ChoiceBox>
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
         </GridPane>
     </top>
     <center>
-        <LineChart BorderPane.alignment="CENTER">
+        <LineChart fx:id="currencyChart" legendVisible="false" BorderPane.alignment="CENTER">
             <xAxis>
-                <CategoryAxis side="BOTTOM"/>
+                <CategoryAxis animated="false" side="BOTTOM" fx:id="xAxis"/>
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT"/>
+                <NumberAxis fx:id="yAxis" animated="false" autoRanging="false" side="LEFT"/>
             </yAxis>
         </LineChart>
     </center>

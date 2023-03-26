@@ -6,6 +6,12 @@ public class AccountItem{
     private final String name;
     private double balance;
 
+    public AccountItem(int id, String currency){
+        this.id = id;
+        this.currency = currency;
+        this.name = "";
+        this.balance = 0.0;
+    }
     public AccountItem(int id, String currency, String name, double balance){
         this.id = id;
         this.currency = currency;
@@ -30,11 +36,7 @@ public class AccountItem{
         return balance;
     }
 
-    public void moneyIn(double value){
-        this.balance += value;
-    }
-
-    public void moneyOut(double value){
-        this.balance -= value;
+    public String getName(){
+        return name;
     }
 }

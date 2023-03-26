@@ -30,7 +30,7 @@ public class HashTool{
 
     public static int generateNewSalt(){
         List<LoginData.LoginDataItem> list = LoginData.getListInstance();
-        Set<Integer> saltSet = list.stream().map(LoginData.LoginDataItem::getSalt).collect(Collectors.toSet());
+        Set<Integer> saltSet = list.stream().map(LoginData.LoginDataItem::salt).collect(Collectors.toSet());
         Random random = new Random();
         int salt = random.nextInt(Short.MAX_VALUE);
 

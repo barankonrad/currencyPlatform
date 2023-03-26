@@ -51,15 +51,15 @@ public class LoginController implements Initializable{
         String inputPassword = passwordTextField.getText();
 
         LoginData.LoginDataItem tryingToLog =
-            loginDataList.stream().filter(data -> data.getLogin().equals(inputLogin)).findAny().orElse(null);
+            loginDataList.stream().filter(data -> data.login().equals(inputLogin)).findAny().orElse(null);
 
         if(tryingToLog != null){
-            int salt = tryingToLog.getSalt();
-            if(tryingToLog.getHash().equals(HashTool.encodeHash(inputPassword, salt))){
+            int salt = tryingToLog.salt();
+            if(tryingToLog.hash().equals(HashTool.encodeHash(inputPassword, salt))){
                 UserSingleton user = UserSingleton.getInstance();
                 user.setLogin(inputLogin);
                 user.setPassword(inputPassword);
-                user.setId(tryingToLog.getId());
+                user.setId(tryingToLog.id());
 
                 login();
                 return;
@@ -77,7 +77,7 @@ public class LoginController implements Initializable{
 //            dialog.getDialogPane().setContent(fxmlLoader.load());
 //        }
 //        catch(IOException e){
-//            System.out.println(e.getMessage());
+//            System.out.println(e());
 //            return;
 //        }
         dialog.setTitle("Sign up");
@@ -114,7 +114,7 @@ public class LoginController implements Initializable{
             System.out.println("Data loaded...");
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }

@@ -17,7 +17,7 @@ public class DBConnection{
         }
         catch(ClassNotFoundException | SQLException e){
             System.out.println("Failed to connect to the database");
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }

@@ -27,12 +27,8 @@ public class ContactItem{
         return friendLogin;
     }
 
-    public String getFriendFirstName(){
-        return friendFirstName;
-    }
-
-    public String getFriendLastName(){
-        return friendLastName;
+    public String getFriendFullName(){
+        return String.format("%s %s", friendFirstName, friendLastName);
     }
 
     @Override

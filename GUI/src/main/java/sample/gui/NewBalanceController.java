@@ -33,8 +33,7 @@ public class NewBalanceController implements Initializable{
         try(Connection conn = DBConnection.getConnection()){
             UserSingleton user = UserSingleton.getInstance();
             String chosenCurrency = currencyChoiceBox.getValue();
-            // TODO: 18.03.2023 HANDLE EMPTY TEXT AND CHARACTER LIMIT
-            String name = nameTextField.getText();
+            String name = nameTextField.getText().trim();
             CallableStatement cs = conn.prepareCall("{call addNewBalance(?, ?, ?)}");
             cs.setInt(1,user.getId());
             cs.setString(2, chosenCurrency);
@@ -43,7 +42,7 @@ public class NewBalanceController implements Initializable{
             cs.execute();
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
+            System.out.println(e);
         }
     }
 }

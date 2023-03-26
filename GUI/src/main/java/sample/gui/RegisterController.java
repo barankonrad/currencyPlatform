@@ -47,7 +47,7 @@ public class RegisterController implements Initializable{
         Consumer<TextField> highlightOff = textField -> textField.setStyle(null);
 
         loginTextField.focusedProperty().addListener(observable -> isLoginOccupied.set(
-                loginDataList.stream().map(LoginData.LoginDataItem::getLogin)
+                loginDataList.stream().map(LoginData.LoginDataItem::login)
                         .anyMatch(login -> login.equals(loginTextField.getText()))));
 
         isLoginOccupied.addListener((observableValue, oldValue, newValue) -> {
